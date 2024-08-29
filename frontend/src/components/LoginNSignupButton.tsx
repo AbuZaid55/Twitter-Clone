@@ -13,7 +13,7 @@ const LoginNSignupButton = () => {
         </Link>
         <p className="text-center">or</p>
         <button className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
-          <FcGoogle /> Sign in with Google
+          <FcGoogle className='text-2xl'/> Continue in with Google
         </button>
       </div>
   )
