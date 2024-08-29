@@ -5,6 +5,11 @@ export const types = `#graphql
         email: String!
         avatar: String
         password: String!
+        confirm_pass: String!
         createdAt: String!
+    }
+    type Response {
+        status: Int!
+        message: String!
     }
 `

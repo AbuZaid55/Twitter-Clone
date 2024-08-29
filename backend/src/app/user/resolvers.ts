@@ -4,7 +4,8 @@ interface Data{
     name: string,
     email: string,
     avatar?: string,
-    password: string
+    password: string,
+    confirm_pass: string
 }
 
 const queries = {

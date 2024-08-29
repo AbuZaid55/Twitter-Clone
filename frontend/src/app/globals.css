@@ -12,3 +12,7 @@
     scrollbar-width: none; 
     -ms-overflow-style: none;
 }
+input:-webkit-autofill {
+    -webkit-text-fill-color: white; 
+    box-shadow: 0 0 0px 1000px #000000 inset;
+  }
