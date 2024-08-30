@@ -3,7 +3,7 @@ export const types = `#graphql
         id: ID!
         name: String!
         email: String!
-        avatar: String
+        avatar: String!
         createdAt: String!
     }
     type Response {

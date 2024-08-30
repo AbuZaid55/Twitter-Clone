@@ -3,7 +3,7 @@ import { LognIn, signup } from "../../api/user"
 interface Data{
     name: string,
     email: string,
-    avatar?: string,
+    avatar: string,
     password: string,
     confirm_pass: string
 }
