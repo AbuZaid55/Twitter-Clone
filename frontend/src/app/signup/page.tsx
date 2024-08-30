@@ -2,12 +2,14 @@
 import { graphqlClient } from "@/client/graphqlClient";
 import { signUp } from "@/graphql/mutations/user";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import {toast} from 'react-toastify'
 
 const page = () => {
+  const router = useRouter()
   const [input,setInput] = useState({name:"",email:"",password:"",confirm_pass:"",avatar:""})
   const handleInput = (e:any)=>{
     setInput({...input,[e.target.name]:e.target.value})
@@ -20,6 +22,8 @@ const page = () => {
         toast.error(data.signUp.message)
       }else{
         toast.success(data.signUp.message)
+        setInput({name:"",email:"",password:"",confirm_pass:"",avatar:""})
+        router.push("/login")
       }
     } catch (error:any) {
       console.log(error)
@@ -37,6 +41,7 @@ const page = () => {
           name="name"
           type="text"
           placeholder="Name"
+          value={input.name}
           onChange={handleInput}
         />
         <input
@@ -44,6 +49,7 @@ const page = () => {
           name="email"
           type="email"
           placeholder="Email"
+          value={input.email}
           onChange={handleInput}
         />
         <input
@@ -51,6 +57,7 @@ const page = () => {
           name="password"
           type="password"
           placeholder="Password"
+          value={input.password}
           onChange={handleInput}
         />
         <input
@@ -58,6 +65,7 @@ const page = () => {
           name="confirm_pass"
           type="password"
           placeholder="Confirm password"
+          value={input.confirm_pass}
           onChange={handleInput}
         />
         <button

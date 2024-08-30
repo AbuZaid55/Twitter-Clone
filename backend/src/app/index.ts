@@ -5,11 +5,13 @@ import {expressMiddleware} from '@apollo/server/express4'
 import { User } from './user'
 import cors from 'cors'
 
+const FRONTEND_URL = process.env.FRONTEND_URL || ''
+
 export async function initServer() {
     const app = express()
     app.use(bodyParser.json())
     app.use(cors({
-        origin:['http://localhost:3000'],
+        origin:[FRONTEND_URL],
         credentials:true
     }))
     const graphqlServer = new ApolloServer({

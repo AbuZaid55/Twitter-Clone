@@ -1,4 +1,4 @@
-import { signup } from "../../api/user"
+import { LognIn, signup } from "../../api/user"
 
 interface Data{
     name: string,
@@ -9,7 +9,10 @@ interface Data{
 }
 
 const queries = {
-    sayHello:async(_:any,{token}:{token:string})=>token
+    logIn:async(_:any,{email,password}:{email:string,password:string})=>{
+        const result = await LognIn(email,password)
+        return result
+    }
 }
 const mutations = {
     signUp:async(_:any,data:Data)=>{
