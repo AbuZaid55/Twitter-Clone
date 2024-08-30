@@ -47,7 +47,6 @@ const authOptions = {
     },
     pages:{
         signIn:"/login",
-        signOut:"/logout"
     },
     secret:process.env.NEXTAUTH_SECRET
 }

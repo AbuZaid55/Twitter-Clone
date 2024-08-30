@@ -1,6 +1,8 @@
+"use client"
 import React from 'react'
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
+import { signOut } from 'next-auth/react';
 
 const LoginNSignupButton = () => {
   return (
@@ -14,6 +16,12 @@ const LoginNSignupButton = () => {
         <p className="text-center">or</p>
         <button className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
           <FcGoogle className='text-2xl'/> Continue in with Google
+        </button>
+
+
+        <p className="text-center">or</p>
+        <button onClick={()=>signOut()} className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
+          Log Out
         </button>
       </div>
   )
