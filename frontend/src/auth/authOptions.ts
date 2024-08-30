@@ -31,7 +31,9 @@ const authOptions = {
     ],
     callbacks:{
         async session ({session,token}:{session:any,token:any}){
-            console.log("Sessioni=>",session,token)
+            session.user.id = token.id
+            session.user.avatar = token.avatar
+            session.user.createdAt = token.createdAt
             return session
         },
         async jwt ({token,user}:{token:any,user:any}){
@@ -44,9 +46,6 @@ const authOptions = {
             }
             return token
         }
-    },
-    pages:{
-        signIn:"/login",
     },
     secret:process.env.NEXTAUTH_SECRET
 }

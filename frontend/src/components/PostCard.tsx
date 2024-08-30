@@ -10,7 +10,7 @@ const PostCard = () => {
     <div className="flex gap-5 p-5 border-t border-slate-500">
       <Image
         className="rounded-full h-fit w-fit"
-        src="/my-photo.png"
+        src="/profile.jpg"
         width={34}
         height={34}
         alt="Pic"

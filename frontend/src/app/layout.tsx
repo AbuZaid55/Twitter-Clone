@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import ClientSessionProvider from "./ClientSessionProvider";
 import "./globals.css";
 
 import { ToastContainer } from 'react-toastify';
@@ -19,10 +20,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <ClientSessionProvider>
       <body className={`${inter.className} bg-black text-white`}>
         {children}
         <ToastContainer/>
       </body>
+      </ClientSessionProvider>
     </html>
   );
 }

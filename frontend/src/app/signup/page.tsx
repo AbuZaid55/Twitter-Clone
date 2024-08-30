@@ -3,7 +3,7 @@ import { graphqlClient } from "@/client/graphqlClient";
 import { signUp } from "@/graphql/mutations/user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import {toast} from 'react-toastify'
@@ -14,7 +14,7 @@ const page = () => {
   const handleInput = (e:any)=>{
     setInput({...input,[e.target.name]:e.target.value})
   }
-  const submitForm = async (e:any) => {
+  const submitForm = useCallback(async (e:any) => {
     e.preventDefault()
     try {
       const data= await graphqlClient.request(signUp,input)
@@ -28,7 +28,7 @@ const page = () => {
     } catch (error:any) {
       console.log(error)
     }
-  };
+  },[input])
   return (
     <div className="flex items-center justify-center flex-col h-screen w-full">
       <div className="text-blue-500 text-5xl">

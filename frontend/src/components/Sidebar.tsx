@@ -1,9 +1,13 @@
-import React from "react";
+"use client"
+import React, { useEffect, useRef, useState } from "react";
 import { BiBell, BiHash, BiHomeCircle, BiMessageMinus } from "react-icons/bi";
 import { RxBookmark } from "react-icons/rx";
 import { FaRegUser } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
 import { MdMoreHoriz } from "react-icons/md";
+import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 interface TwitterSidebarButton {
   title: String;
@@ -40,20 +44,61 @@ const sidebarItem: TwitterSidebarButton[] = [
   },
 ];
 
+interface User {
+    id:string
+    name:string 
+    email:string 
+    avatar:string 
+    createdAt:string
+}
+
 const Sidebar = () => {
+  const [showButton, setShowButton] = useState(false);
+  const buttonRef = useRef<HTMLSpanElement | null>(null)
+  const {data}= useSession()
+  const userData = data?.user as User;
+
+  const handleClickOutSide = (e:any) =>{
+    if (buttonRef.current && !buttonRef.current.contains(e.target)) {
+      setShowButton(false);
+    }
+  }
+
+  useEffect(()=>{
+    if(!showButton) return
+    window.addEventListener('mousedown',handleClickOutSide)
+    return () => {
+      window.removeEventListener("mousedown",handleClickOutSide)
+    }
+  },[showButton])
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end h-screen relative">
       <div className="pr-20 pt-5">
+
         <div className="text-3xl hover:bg-slate-900 w-fit p-3 rounded-full cursor-pointer transition-all">
           <FaTwitter />
         </div>
+
         {sidebarItem.map((item, i) => (
           <div className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full cursor-pointer transition-all" key={i}>
             <span>{item.icon}</span>
             <span>{item.title}</span>
           </div>
         ))}
+
         <button className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5">Post</button>
+
+        <div className="flex items-center gap-5 absolute bottom-2 mb-2 mr-5 bg-slate-900 px-6 py-3 rounded-full text-xl">
+          <Image className="rounded-full" src={(userData?.avatar)?userData.avatar:'/profile.jpg'} width={40} height={40} alt="Pic"/>
+
+          <h1 className=" h-8 overflow-hidden">{userData?.name}</h1>
+
+          <span ref={buttonRef}><MdMoreHoriz onClick={()=>{setShowButton(!showButton)}} className="text-3xl cursor-pointer"/>
+
+            <button onClick={()=>signOut()} className={`${(showButton)?"":"hidden"} absolute -top-7 right-2 border py-2 px-4 rounded-md border-slate-500 bg-slate-800 hover:bg-slate-900  transition-all`}>Log Out</button>
+
+          </span>
+        </div>
       </div>
     </div>
   );
