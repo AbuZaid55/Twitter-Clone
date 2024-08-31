@@ -10,8 +10,7 @@ import { toast } from "react-toastify";
 const page = () => {
   const [input, setInput] = useState({ email: "", password: "" });
   const router = useRouter();
-  const submitForm = useCallback(async (e:any) => {e
-    e.preventDefault()
+  const submitForm = useCallback(async () => {
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -53,13 +52,14 @@ const page = () => {
           placeholder="Password"
         />
         <button
+          type="button"
           onClick={submitForm}
           className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5"
         >
           Log In
         </button>
         <p className="text-center">or</p>
-        <button className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
+        <button type="button" onClick={()=>{signIn("google")}} className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
           <FcGoogle className="text-2xl" /> Continue in with Google
         </button>
       </form>

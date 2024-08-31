@@ -1,6 +1,7 @@
 "use client"
 import { graphqlClient } from "@/client/graphqlClient";
 import { signUp } from "@/graphql/mutations/user";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
@@ -14,8 +15,7 @@ const page = () => {
   const handleInput = (e:any)=>{
     setInput({...input,[e.target.name]:e.target.value})
   }
-  const submitForm = useCallback(async (e:any) => {
-    e.preventDefault()
+  const submitForm = useCallback(async () => {
     try {
       const data= await graphqlClient.request(signUp,input)
       if(data?.signUp?.status!=200){
@@ -69,13 +69,14 @@ const page = () => {
           onChange={handleInput}
         />
         <button
+          type="button"
           onClick={submitForm}
           className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5"
         >
           Sign Up
         </button>
         <p className="text-center">or</p>
-        <button className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
+        <button type="button" onClick={()=>{signIn("google")}} className="border border-white rounded-full py-2 px-10 text-lg bg-white text-slate-700 flex items-center gap-3 hover:bg-slate-200 transition-all">
           <FcGoogle className="text-2xl" /> Continue in with Google
         </button>
       </form>

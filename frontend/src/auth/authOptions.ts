@@ -1,4 +1,5 @@
 import CredentialProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google"
 import { LogIn } from "@/graphql/queries/user";
 import { graphqlClient } from "@/client/graphqlClient";
 
@@ -9,6 +10,36 @@ interface User {
     avatar?: string
     createdAt: string
 }
+
+interface Profile {
+    iss: string,
+    azp: string,
+    aud: string,
+    sub: string,
+    email: string,
+    email_verified: string,
+    at_hash: string,
+    name: string,
+    picture: string,      
+    given_name: string,
+    family_name: string,
+    iat: number,
+    exp: number
+}
+
+interface Account {
+    provider: string,
+    type: string,
+    providerAccountId: string,
+    access_token?: string,
+    expires_at?: number,
+    scope?: string,    
+    token_type?: string,
+    id_token?: string
+}
+
+const googleClientId=process.env.GOOGLE_CLIENT_ID || ""
+const googleClientSecret=process.env.GOOGLE_CLIENT_SECRET || ""
 
 const authOptions = {
     providers:[
@@ -27,9 +58,24 @@ const authOptions = {
                     return null
                 }
             }
+        }),
+        GoogleProvider({
+            clientId:googleClientId,
+            clientSecret:googleClientSecret
         })
     ],
     callbacks:{
+        async signIn({account,profile}:{account:Account,profile:Profile | undefined}){
+            if(account.provider=="google"){
+                if(profile){
+                    const {name,email,picture} = profile
+                    
+                }else {
+                    return false
+                }
+            }
+            return true
+        },
         async session ({session,token}:{session:any,token:any}){
             session.user.id = token.id
             session.user.avatar = token.avatar
@@ -41,7 +87,7 @@ const authOptions = {
                 token.id = user.id
                 token.name = user.name
                 token.email = user.email
-                token.avatar = user.avatar
+                token.avatar = (user.image)?user.image:user.avatar
                 token.createdAt = user.createdAt
             }
             return token
