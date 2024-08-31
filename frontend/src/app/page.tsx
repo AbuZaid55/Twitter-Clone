@@ -6,7 +6,7 @@ export default function Home() {
     <div className="grid grid-cols-7 h-screen">
       <div className="col-span-2"><Sidebar /></div>
       <div className="col-span-3"><Main/></div>
-      <div className="col-span-2"><LoginNSignupButton/></div>
+      {/* <div className="col-span-2"><LoginNSignupButton/></div> */}
     </div>
   );
 }

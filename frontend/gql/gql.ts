@@ -13,7 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n": types.SignUpDocument,
+    "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String!) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n": types.SignUpDocument,
+    "\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar) {\n            status\n            message\n            user {\n                id\n                name\n                email\n                avatar\n                createdAt\n            }\n        }\n    }\n": types.MutationDocument,
     "#graphql\n    query logIn($email:String!,$password:String!){\n        logIn(email:$email,password:$password){\n            status\n            message\n            user {\n                id\n                name\n                email\n                avatar\n                createdAt\n            }\n        }\n    }\n": types.LogInDocument,
 };
 
@@ -34,7 +35,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n"): (typeof documents)["\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n"];
+export function graphql(source: "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String!) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n"): (typeof documents)["\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String!) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar) {\n            status\n            message\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar) {\n            status\n            message\n            user {\n                id\n                name\n                email\n                avatar\n                createdAt\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar) {\n            status\n            message\n            user {\n                id\n                name\n                email\n                avatar\n                createdAt\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,4 +1,4 @@
-import { LognIn, signup } from "../../api/user"
+import { LognIn, signup, ContinueWithGoogle } from "../../api/user"
 
 interface Data{
     name: string,
@@ -17,6 +17,10 @@ const queries = {
 const mutations = {
     signUp:async(_:any,data:Data)=>{
         const result = await signup(data)
+        return result;
+    },
+    continueWithGoogle:async(_:any,{name,email,avatar}:{name:string,email:string,avatar:string})=>{
+        const result = await ContinueWithGoogle(name,email,avatar)
         return result;
     }
 }
