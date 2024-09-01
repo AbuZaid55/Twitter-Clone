@@ -5,8 +5,10 @@ import { BiRepost } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
 import { HiArrowUpTray } from "react-icons/hi2";
 import { Tweet } from '../../gql/graphql';
+import moment from 'moment'
 
 const PostCard = ({tweet}:{tweet:Tweet}) => {
+  const timeago = moment(Number(tweet.updatedAt)).fromNow()
   return (
     <div className="flex gap-5 p-5 border-t border-slate-500">
       <Image
@@ -17,8 +19,8 @@ const PostCard = ({tweet}:{tweet:Tweet}) => {
         alt="Pic"
       />
       <div className="w-full">
-        <h1 className='font-semibold'>{tweet.author?.name} <span className='font-extralight'> · 2h</span></h1>
-        <p>{tweet.content}</p>
+        <h1 className='font-semibold'>{tweet.author?.name} <span className='font-extralight'> · {timeago}</span></h1>
+        <p dangerouslySetInnerHTML={{__html:tweet.content}}></p>
         <div className='flex items-center justify-between mt-3 text-lg'>
             <FiMessageCircle className=' cursor-pointer hover:text-blue-500 transition-all'/>
             <BiRepost className=' cursor-pointer hover:text-blue-500 transition-all'/>

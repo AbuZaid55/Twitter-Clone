@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "#graphql \n    mutation createTweet($content: String!, $imageUrl: String) {\n        createTweet(content: $content, imageUrl: $imageUrl) {\n            id\n        }\n}\n": types.CreateTweetDocument,
     "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String!) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar)\n    }\n": types.SignUpDocument,
     "\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n": types.MutationDocument,
     "#graphql \n    query getAllTweets {\n      getAllTweets {\n        content\n        createdAt\n        id\n        imageUrl\n        updatedAt\n        author {\n          id\n          name\n          email\n          avatar\n        }\n      }\n    }\n": types.GetAllTweetsDocument,
@@ -34,6 +35,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "#graphql \n    mutation createTweet($content: String!, $imageUrl: String) {\n        createTweet(content: $content, imageUrl: $imageUrl) {\n            id\n        }\n}\n"): (typeof documents)["#graphql \n    mutation createTweet($content: String!, $imageUrl: String) {\n        createTweet(content: $content, imageUrl: $imageUrl) {\n            id\n        }\n}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
