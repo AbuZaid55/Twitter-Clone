@@ -71,6 +71,14 @@ export const ContinueWithGoogle = async(name:string,email:string,avatar:string)=
         const token = JWTService.generateToken(isExist)
         return {status:200,message:"Google login or signup successfull",user:{id:isExist.id,name:isExist.name,email:isExist.email,avatar:isExist.avatar,createdAt:isExist.createdAt,twitter_token:token}}
     } catch (error:any) {
-        return {status:400,message:error.message}
+        return {status:400,message:error?.message}
+    }
+}
+export const getUserById = async(id:string)=>{
+    try {
+        const result = await prisma.user.findUnique({where:{id:id}})
+        return result;
+    } catch (error:any) {
+        return error?.message
     }
 }

@@ -6,6 +6,7 @@ export const types = `#graphql
         avatar: String!
         createdAt: String!
         twitter_token: String
+        tweets: [Tweet]
     }
     type Response {
         status: Int!

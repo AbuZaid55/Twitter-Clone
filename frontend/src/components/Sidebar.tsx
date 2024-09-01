@@ -52,7 +52,10 @@ const Sidebar = () => {
       setShowButton(false);
     }
   }
-
+  const logOut = ()=>{
+    signOut()
+    window.localStorage.removeItem('twitter_token')
+  }
   useEffect(()=>{
     if(!showButton) return
     window.addEventListener('mousedown',handleClickOutSide)
@@ -84,7 +87,7 @@ const Sidebar = () => {
 
           <span ref={buttonRef}><MdMoreHoriz onClick={()=>{setShowButton(!showButton)}} className="text-3xl cursor-pointer"/>
 
-            <button onClick={()=>signOut()} className={`${(showButton)?"":"hidden"} absolute -top-7 right-2 border py-2 px-4 rounded-md border-slate-500 bg-slate-800 hover:bg-slate-900  transition-all`}>Log Out</button>
+            <button onClick={logOut} className={`${(showButton)?"":"hidden"} absolute -top-7 right-2 border py-2 px-4 rounded-md border-slate-500 bg-slate-800 hover:bg-slate-900  transition-all`}>Log Out</button>
 
           </span>
         </div>
