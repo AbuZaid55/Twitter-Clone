@@ -1,12 +1,7 @@
 import { LognIn, signup, ContinueWithGoogle } from "../../api/user"
+import { SignUpPayload } from "../../interfaces"
 
-interface Data{
-    name: string,
-    email: string,
-    avatar: string,
-    password: string,
-    confirm_pass: string
-}
+
 
 const queries = {
     logIn:async(_:any,{email,password}:{email:string,password:string})=>{
@@ -15,7 +10,7 @@ const queries = {
     }
 }
 const mutations = {
-    signUp:async(_:any,data:Data)=>{
+    signUp:async(_:any,data:SignUpPayload)=>{
         const result = await signup(data)
         return result;
     },

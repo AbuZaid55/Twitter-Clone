@@ -5,6 +5,7 @@ export const types = `#graphql
         email: String!
         avatar: String!
         createdAt: String!
+        twitter_token: String
     }
     type Response {
         status: Int!

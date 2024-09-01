@@ -19,6 +19,7 @@ export const ContinueWithGoogle = graphql(`
                 email
                 avatar
                 createdAt
+                twitter_token
             }
         }
     }

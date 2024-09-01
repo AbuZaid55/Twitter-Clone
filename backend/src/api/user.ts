@@ -1,14 +1,11 @@
 import { prisma } from "../client/db"
 import bcrypt from 'bcrypt'
+import JWTService from "../services/jwt"
+import { SignUpPayload } from "../interfaces"
 
-interface Data{
-    name: string,
-    email: string,
-    avatar?: string,
-    password: string
-    confirm_pass: string
-}
-export const signup = async(data:Data)=>{
+const JWT_SECRET = process.env.JWT_SECRET || ''
+
+export const signup = async(data:SignUpPayload)=>{
     const {name,email,password, confirm_pass,avatar} = data
     if(!name || !email || !password || !confirm_pass){
         return {status:400,message:"All field are required!"}
@@ -50,7 +47,8 @@ export const LognIn = async(email:string,password:string)=>{
             return {status:400,message:"Invalid email or password"}
         }
         const {id,name,avatar,createdAt} = isExist
-        return {status:200,message:"Login successfull",user:{id,name,email:isExist.email,avatar,createdAt}}
+        const token = JWTService.generateToken(isExist)
+        return {status:200,message:"Login successfull",user:{id,name,email:isExist.email,avatar,createdAt,twitter_token:token}}
     } catch (error:any) {
         return {status:400,message:error?.message}
     }
@@ -67,9 +65,11 @@ export const ContinueWithGoogle = async(name:string,email:string,avatar:string)=
             const salt = await bcrypt.genSalt(10)
             const hashPassword = await bcrypt.hash(password,salt)
             const result = await prisma.user.create({data:{name,email,password:hashPassword,avatar}})
-            return {status:200,message:"Google login or signup successfull",user:{id:result.id,name:result.name,email:result.email,avatar:result.avatar,createdAt:result.createdAt}}
+            const token = JWTService.generateToken(result)
+            return {status:200,message:"Google login or signup successfull",user:{id:result.id,name:result.name,email:result.email,avatar:result.avatar,createdAt:result.createdAt,twitter_token:token}}
         }
-        return {status:200,message:"Google login or signup successfull",user:{id:isExist.id,name:isExist.name,email:isExist.email,avatar:isExist.avatar,createdAt:isExist.createdAt}}
+        const token = JWTService.generateToken(isExist)
+        return {status:200,message:"Google login or signup successfull",user:{id:isExist.id,name:isExist.name,email:isExist.email,avatar:isExist.avatar,createdAt:isExist.createdAt,twitter_token:token}}
     } catch (error:any) {
         return {status:400,message:error.message}
     }

@@ -7,12 +7,9 @@ import { FaTwitter } from "react-icons/fa";
 import { MdMoreHoriz } from "react-icons/md";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import { Session } from "next-auth";
+import { TwitterSidebarButton, User } from "@/interfaces";
 
-interface TwitterSidebarButton {
-  title: String;
-  icon: React.ReactNode;
-}
+
 
 const sidebarItem: TwitterSidebarButton[] = [
   {
@@ -43,14 +40,6 @@ const sidebarItem: TwitterSidebarButton[] = [
     icon: <MdMoreHoriz />,
   },
 ];
-
-interface User {
-    id:string
-    name:string 
-    email:string 
-    avatar:string 
-    createdAt:string
-}
 
 const Sidebar = () => {
   const [showButton, setShowButton] = useState(false);

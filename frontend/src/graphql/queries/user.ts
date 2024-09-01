@@ -11,6 +11,7 @@ export const LogIn = graphql(`#graphql
                 email
                 avatar
                 createdAt
+                twitter_token
             }
         }
     }

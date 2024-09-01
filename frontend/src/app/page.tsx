@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Sidebar";
-import LoginNSignupButton from "@/components/LoginNSignupButton";
+// import LoginNSignupButton from "@/components/LoginNSignupButton";
 import Main from "@/components/Main";
 export default function Home() {
   return (
