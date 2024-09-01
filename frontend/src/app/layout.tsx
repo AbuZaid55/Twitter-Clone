@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import ClientSessionProvider from "./ClientSessionProvider";
+import ClientSessionProvider from "../providers/ClientSessionProvider";
 import "./globals.css";
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import SetTokenToLocalStorage from "./SetTokenToLocalStorage";
+import {Toaster} from 'react-hot-toast'
+import SetTokenToLocalStorage from "../providers/SetTokenToLocalStorage";
+import ReactQueryClientProvider from "../providers/ReactQueryClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,13 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ClientSessionProvider>
       <body className={`${inter.className} bg-black text-white`}>
-        {children}
-        <ToastContainer/>
+        <ReactQueryClientProvider>
+          <ClientSessionProvider>
+            {children}
+            <Toaster />
+            <SetTokenToLocalStorage />
+          </ClientSessionProvider>
+        </ReactQueryClientProvider>
       </body>
-      <SetTokenToLocalStorage/>
-      </ClientSessionProvider>
     </html>
   );
 }

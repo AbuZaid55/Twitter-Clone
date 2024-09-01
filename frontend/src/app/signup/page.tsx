@@ -1,13 +1,13 @@
 "use client"
 import { graphqlClient } from "@/client/graphqlClient";
-import { signUp } from "@/graphql/mutations/user";
+import { SignUp } from "@/graphql/mutations/user";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import {toast} from 'react-toastify'
+import {toast} from 'react-hot-toast'
 
 const page = () => {
   const router = useRouter()
@@ -17,16 +17,11 @@ const page = () => {
   }
   const submitForm = useCallback(async () => {
     try {
-      const data= await graphqlClient.request(signUp,input)
-      if(data?.signUp?.status!=200){
-        toast.error(data.signUp.message)
-      }else{
-        toast.success(data.signUp.message)
-        setInput({name:"",email:"",password:"",confirm_pass:"",avatar:""})
-        router.push("/login")
-      }
+      const data= await graphqlClient.request(SignUp,input)
+      toast.success(data?.signUp)
+      router.push("/login")
     } catch (error:any) {
-      console.log(error)
+      toast.error(error?.response?.errors[0]?.message)
     }
   },[input])
   return (

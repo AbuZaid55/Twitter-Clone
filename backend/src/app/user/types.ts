@@ -8,9 +8,4 @@ export const types = `#graphql
         twitter_token: String
         tweets: [Tweet]
     }
-    type Response {
-        status: Int!
-        message: String!
-        user:User
-    }
 `

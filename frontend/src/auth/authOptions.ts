@@ -13,16 +13,14 @@ const authOptions = {
     providers: [
         CredentialProvider({
             credentials: {},
-            async authorize(credentials: any) {
+            async authorize(credentials: any): Promise<any> {
                 const { email, password } = credentials;
-                const data = await graphqlClient.request(LogIn, { email, password });
-
-                if (data?.logIn?.status !== 200) {
-                    throw new Error(data.logIn?.message);
+                try {
+                    const data = await graphqlClient.request(LogIn, { email, password });
+                    return {twitter_token:data.logIn}
+                } catch (error:any) {
+                    throw new Error(error?.response?.errors[0]?.message)
                 }
-
-                const user = data.logIn.user;
-                return user || null;
             }
         }),
         GoogleProvider({
@@ -32,34 +30,23 @@ const authOptions = {
     ],
     callbacks: {
         async session({ session, token }: { session: any, token: any }) {
-            session.user = token
+            session.user.twitter_token = token.twitter_token
             return session;
         },
         async jwt({ token, user, account, profile }: { token: any, user: any, account: Account, profile: Profile }) {
-            
+
             if (account?.provider === "google" && profile) {
                 const { name, email, picture } = profile;
                 const avatar = picture;
-                
-                const data = await graphqlClient.request(ContinueWithGoogle, { name, email, avatar });
-                if (data.continueWithGoogle.status !== 200 || !data.continueWithGoogle.user) {
-                    console.error("Google login failed:", data.continueWithGoogle.message);
-                    throw new Error(data.continueWithGoogle.message);
+                try {
+                    const data = await graphqlClient.request(ContinueWithGoogle, { name, email, avatar });
+                    token.twitter_token = data?.continueWithGoogle
+                } catch (error:any) {
+                    console.log(error?.response?.errors[0]?.message)
+                    return null;
                 }
-                const dbUser = data.continueWithGoogle.user;
-                token.id = dbUser.id;
-                token.name = dbUser.name;
-                token.email = dbUser.email;
-                token.avatar = dbUser.avatar;
-                token.createdAt = dbUser.createdAt;
-                token.twitter_token = dbUser.twitter_token
             }
             else if (user) {
-                token.id = user.id;
-                token.name = user.name;
-                token.email = user.email;
-                token.avatar =  user.avatar;
-                token.createdAt = user.createdAt;
                 token.twitter_token = user.twitter_token
             }
             return token;

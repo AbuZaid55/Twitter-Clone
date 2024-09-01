@@ -1,13 +1,16 @@
 import React from 'react'
 import Image from "next/image";
 import { RiGalleryLine } from "react-icons/ri";
+import { useCurrentUser } from '@/hooks/user';
 
 const MakePostCard = () => {
+  const {user} = useCurrentUser()
+  console.log(user)
   return (
     <div className="flex gap-5 p-5">
       <Image
-        className="rounded-full h-fit w-fit"
-        src="/profile.jpg"
+        className="rounded-full h-12 w-12 object-cover"
+        src={user?.avatar || "/profile.jpg"}
         width={34}
         height={34}
         alt="Pic"

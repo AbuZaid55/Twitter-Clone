@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const page = () => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -20,6 +20,7 @@ const page = () => {
       if (res?.error) {
         toast.error(res.error);
       } else {
+        toast.success("Login successfull")
         router.push("/");
       }
     } catch (error) {

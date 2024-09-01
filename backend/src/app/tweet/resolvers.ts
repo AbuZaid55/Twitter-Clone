@@ -1,9 +1,10 @@
 import { Tweet } from '@prisma/client'
-import { CreateTweet } from '../../api/tweet'
+import { CreateTweet, GetAllTweets } from '../../api/tweet'
 import {GrapqlContext} from '../../interfaces'
 import { getUserById } from '../../api/user'
-const queries = {
 
+const queries = {
+    getAllTweets:async()=>await GetAllTweets()
 }
 const mutations = {
     createTweet:async(_:any,{content,imageUrl}:{content:string,imageUrl?:string},ctx:GrapqlContext)=>{

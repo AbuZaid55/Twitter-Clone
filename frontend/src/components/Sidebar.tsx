@@ -6,8 +6,9 @@ import { FaRegUser } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
 import { MdMoreHoriz } from "react-icons/md";
 import Image from "next/image";
-import { signOut, useSession } from "next-auth/react";
-import { TwitterSidebarButton, User } from "@/interfaces";
+import { signOut } from "next-auth/react";
+import { TwitterSidebarButton } from "@/interfaces";
+import { useCurrentUser } from "@/hooks/user";
 
 
 
@@ -44,8 +45,7 @@ const sidebarItem: TwitterSidebarButton[] = [
 const Sidebar = () => {
   const [showButton, setShowButton] = useState(false);
   const buttonRef = useRef<HTMLSpanElement | null>(null)
-  const {data}= useSession()
-  const userData = data?.user as User;
+  const {user:userData} = useCurrentUser()
 
   const handleClickOutSide = (e:any) =>{
     if (buttonRef.current && !buttonRef.current.contains(e.target)) {
