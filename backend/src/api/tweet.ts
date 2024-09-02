@@ -1,6 +1,9 @@
 import { prisma } from '../client/db'
 
 export const CreateTweet = async(userId:string,content:string,imageUrl?:string) => {
+    if(!content){
+        throw new Error("Please write some content!")
+    }
     const result = await prisma.tweet.create({data:{
         content: content,
         imageUrl: imageUrl,

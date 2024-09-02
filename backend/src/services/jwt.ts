@@ -14,9 +14,9 @@ class JWTService {
             avatar:user.avatar,
             createdAt:user.createdAt
         }
-        return JWT.sign(payload,JWT_SECRET,{expiresIn:"10m"})
-    }
-    public static decondeToken (token:string){
+        return JWT.sign(payload,JWT_SECRET,{expiresIn:"1h"})
+    } 
+    public static decondeToken (token:string){ 
         try {
             return JWT.verify(token,JWT_SECRET) as JWTUser
         } catch (error) {

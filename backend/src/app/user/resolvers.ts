@@ -12,6 +12,7 @@ const queries = {
         return result
     },
     getCurrentUser:async(_:any,args:any,ctx:GrapqlContext)=>{
+        if(!ctx.user) throw new Error("You are not authenticated!")
         return ctx.user
     }
 }

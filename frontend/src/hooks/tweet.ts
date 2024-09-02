@@ -21,6 +21,9 @@ export const useCreateTweet = () => {
             await queryClient.invalidateQueries({queryKey:['all-tweets']})
             toast.success("Created Success",{id:"1"})
         },
+        onError:(error:any)=>{
+            toast.error(error?.response?.errors[0]?.message,{id:"1"})
+        }
     })
     return mutation
 }

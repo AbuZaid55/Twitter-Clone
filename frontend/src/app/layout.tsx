@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ClientSessionProvider from "../providers/ClientSessionProvider";
+import CustomLayout from "./CustomLayout";
 import "./globals.css";
 
-import {Toaster} from 'react-hot-toast'
+import { Toaster } from "react-hot-toast";
 import SetTokenToLocalStorage from "../providers/SetTokenToLocalStorage";
 import ReactQueryClientProvider from "../providers/ReactQueryClientProvider";
 
@@ -24,7 +25,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-black text-white`}>
         <ReactQueryClientProvider>
           <ClientSessionProvider>
-            {children}
+            <CustomLayout>{children}</CustomLayout>
             <Toaster />
             <SetTokenToLocalStorage />
           </ClientSessionProvider>

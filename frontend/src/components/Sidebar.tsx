@@ -63,6 +63,7 @@ const Sidebar = () => {
       window.removeEventListener("mousedown",handleClickOutSide)
     }
   },[showButton])
+
   return (
     <div className="flex justify-end h-screen relative">
       <div className="pr-20 pt-5">

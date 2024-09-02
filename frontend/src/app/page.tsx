@@ -1,11 +1,22 @@
-import Sidebar from "@/components/Sidebar";
-import Main from "@/components/Main";
+"use client"
+import React from "react";
+import MakePostCard from "@/components/MakePostCard";
+import PostCard from "@/components/PostCard";
+import { useGetAllTweets } from "@/hooks/tweet";
+import { Tweet } from "../../gql/graphql";
+
 export default function Home() {
+  const {tweets=[]} = useGetAllTweets()
   return (
-    <div className="grid grid-cols-7 h-screen">
-      <div className="col-span-2"><Sidebar /></div>
-      <div className="col-span-3"><Main/></div>
-      <div className="col-span-2"></div>
+    <div>
+        <MakePostCard/>
+        <div>
+            {
+              tweets?.map((tweet)=>(
+                tweets?<PostCard key={tweet?.id} tweet={tweet as Tweet}/>:null
+              ))
+            }
+        </div>
     </div>
   );
 }
