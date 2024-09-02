@@ -9,6 +9,7 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { TwitterSidebarButton } from "@/interfaces";
 import { useCurrentUser } from "@/hooks/user";
+import Link from "next/link";
 
 
 
@@ -73,10 +74,10 @@ const Sidebar = () => {
         </div>
 
         {sidebarItem.map((item, i) => (
-          <div className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full cursor-pointer transition-all" key={i}>
+          <Link href={`/${userData?.id}`} className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full transition-all" key={i}>
             <span>{item.icon}</span>
             <span>{item.title}</span>
-          </div>
+          </Link>
         ))}
 
         <button className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5">Post</button>

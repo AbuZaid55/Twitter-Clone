@@ -6,7 +6,7 @@ export interface User {
     createdAt:string
 }
 export interface TwitterSidebarButton {
-    title: String;
+    title: string;
     icon: React.ReactNode;
   }
 export interface Profile {
