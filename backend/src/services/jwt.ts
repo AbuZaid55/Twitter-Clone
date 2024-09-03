@@ -14,7 +14,7 @@ class JWTService {
             avatar:user.avatar,
             createdAt:user.createdAt
         }
-        return JWT.sign(payload,JWT_SECRET,{expiresIn:"1h"})
+        return JWT.sign(payload,JWT_SECRET,{expiresIn:"20d"})
     } 
     public static decondeToken (token:string){ 
         try {

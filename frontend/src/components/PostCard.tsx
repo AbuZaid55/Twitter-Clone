@@ -8,6 +8,7 @@ import { Tweet } from '../../gql/graphql';
 import moment from 'moment'
 
 const PostCard = ({tweet}:{tweet:Tweet}) => {
+  if(!tweet) return;
   const timeago = moment(Number(tweet.updatedAt)).fromNow()
   return (
     <div className="flex gap-5 p-5 border-t border-slate-500">

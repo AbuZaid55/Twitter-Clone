@@ -7,7 +7,8 @@ import toast from "react-hot-toast"
 export const useGetAllTweets = () => {
     const query = useQuery({
         queryKey:['all-tweets'],
-        queryFn:()=> graphqlClient.request(GetAllTweets)
+        queryFn:()=> graphqlClient.request(GetAllTweets),
+        enabled:false
     })
     return {...query,tweets:query?.data?.getAllTweets}
 }

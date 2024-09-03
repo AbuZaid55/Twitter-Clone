@@ -9,7 +9,8 @@ export const useCurrentUser = () => {
         queryKey:['current-user'],
         refetchOnWindowFocus:false,
         queryFn:()=> graphqlClient.request(GetCurrentUser),
-        retry:2
+        retry:2,
+        enabled:false
     })
     if(query.isError){
         const error = query?.error as any
