@@ -8,6 +8,7 @@ export interface User {
 export interface TwitterSidebarButton {
     title: string;
     icon: React.ReactNode;
+    link:string
   }
 export interface Profile {
     email: string;

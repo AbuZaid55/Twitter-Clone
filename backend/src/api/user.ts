@@ -60,6 +60,9 @@ export const ContinueWithGoogle = async(name:string,email:string,avatar:string)=
     return token;
 }
 export const getUserById = async(id:string)=>{
+    if(!id){
+        throw new Error("User id not found!")
+    }
     const result = await prisma.user.findUnique({where:{id:id},select:{
         id:true,
         name:true,
@@ -67,5 +70,8 @@ export const getUserById = async(id:string)=>{
         avatar:true,
         createdAt:true
     }})
+    if(!result){
+        throw new Error("User does not exist!")
+    }
     return result;
 }

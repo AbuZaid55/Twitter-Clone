@@ -1,5 +1,5 @@
 import { User } from "@prisma/client"
-import { LognIn, signup, ContinueWithGoogle } from "../../api/user"
+import { LognIn, signup, ContinueWithGoogle, getUserById } from "../../api/user"
 import { SignUpPayload } from "../../interfaces"
 import {GrapqlContext} from '../../interfaces'
 import { getTweetsByAuthor } from "../../api/tweet"
@@ -14,6 +14,10 @@ const queries = {
     getCurrentUser:async(_:any,args:any,ctx:GrapqlContext)=>{
         if(!ctx.user) throw new Error("You are not authenticated!")
         return ctx.user
+    },
+    getUserById:async(_:any,{id}:{id:string})=>{
+        const result = await getUserById(id)
+        return result;
     }
 }
 const mutations = {

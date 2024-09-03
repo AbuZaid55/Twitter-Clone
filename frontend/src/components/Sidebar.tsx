@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BiBell, BiHash, BiHomeCircle, BiMessageMinus } from "react-icons/bi";
 import { RxBookmark } from "react-icons/rx";
 import { FaRegUser } from "react-icons/fa6";
@@ -11,43 +11,47 @@ import { TwitterSidebarButton } from "@/interfaces";
 import { useCurrentUser } from "@/hooks/user";
 import Link from "next/link";
 
-
-
-const sidebarItem: TwitterSidebarButton[] = [
-  {
-    title: "Home",
-    icon: <BiHomeCircle />,
-  },
-  {
-    title: "Explore",
-    icon: <BiHash />,
-  },
-  {
-    title: "Notifications",
-    icon: <BiBell />,
-  },
-  {
-    title: "Messages",
-    icon: <BiMessageMinus />,
-  },
-  {
-    title: "Bookmarks",
-    icon: <RxBookmark />,
-  },
-  {
-    title: "Profile",
-    icon: <FaRegUser />,
-  }, {
-    title: "More",
-    icon: <MdMoreHoriz />,
-  },
-];
-
 const Sidebar = () => {
   const [showButton, setShowButton] = useState(false);
   const buttonRef = useRef<HTMLSpanElement | null>(null)
   const {user:userData} = useCurrentUser()
-
+  const sidebarItem: TwitterSidebarButton[] = useMemo(()=>[
+    {
+      title: "Home",
+      icon: <BiHomeCircle />,
+      link:"/"
+    },
+    {
+      title: "Explore",
+      icon: <BiHash />,
+      link:"/"
+    },
+    {
+      title: "Notifications",
+      icon: <BiBell />,
+      link:"/"
+    },
+    {
+      title: "Messages",
+      icon: <BiMessageMinus />,
+      link:"/"
+    },
+    {
+      title: "Bookmarks",
+      icon: <RxBookmark />,
+      link:"/"
+    },
+    {
+      title: "Profile",
+      icon: <FaRegUser />,
+      link:`/${userData?.id}`
+    }, {
+      title: "More",
+      icon: <MdMoreHoriz />,
+      link:"/"
+    },
+  ],[])
+  
   const handleClickOutSide = (e:any) =>{
     if (buttonRef.current && !buttonRef.current.contains(e.target)) {
       setShowButton(false);
@@ -74,7 +78,7 @@ const Sidebar = () => {
         </div>
 
         {sidebarItem.map((item, i) => (
-          <Link href={`/${userData?.id}`} className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full transition-all" key={i}>
+          <Link href={item.link} className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full transition-all" key={i}>
             <span>{item.icon}</span>
             <span>{item.title}</span>
           </Link>
