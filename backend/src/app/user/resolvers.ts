@@ -2,7 +2,7 @@ import { User } from "@prisma/client"
 import { LognIn, signup, ContinueWithGoogle, getUserById } from "../../api/user"
 import { SignUpPayload } from "../../interfaces"
 import {GrapqlContext} from '../../interfaces'
-import { getTweetsByAuthor } from "../../api/tweet"
+import { GetTweetsByAuthor } from "../../api/tweet"
 
 
 
@@ -32,7 +32,7 @@ const mutations = {
 }
 const extraResolvers = {
     User:{
-        tweets:async(parent:User) => await getTweetsByAuthor(parent.id) 
+        tweets:async(parent:User) => await GetTweetsByAuthor(parent.id) 
     }
 }
 export const resolvers = {mutations, queries,extraResolvers}
