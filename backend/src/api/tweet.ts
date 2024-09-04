@@ -33,7 +33,7 @@ export const GetSignedURlForTweet = async(imageType:string,imageName:string,user
     if(!allowedImageTypes.includes(imageType)) throw new Error("Unsupported Image Type!")
     const commond = new PutObjectCommand({
         Bucket:AWS_S3_BUCKET,
-        Key:`uploads/${userId}/tweets/${imageName}-${Date.now()}.${imageType}`
+        Key:`uploads/${userId}/tweets/${imageName}-${Date.now()}`
     })
     const signedUrl = await getSignedUrl(s3Client,commond,{expiresIn:3600})
     return signedUrl

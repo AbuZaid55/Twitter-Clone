@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Image from "next/image";
 import { RiGalleryLine } from "react-icons/ri";
 import { useCurrentUser } from '@/hooks/user';
@@ -10,55 +10,59 @@ import toast from 'react-hot-toast';
 
 const MakePostCard = () => {
   const {user} = useCurrentUser()
-  const {mutate} = useCreateTweet()
   const [content,setContent] = useState('')
   const [file,setFile]=useState({type:''})
   const [selectedImageUrl,setSelectedImageUrl]=useState('')
+  const [signedUrl,setSignedUrl] = useState('')
+  const {mutate} = useCreateTweet({setContent,setSignedUrl,setFile,setSelectedImageUrl})
 
-  const getSignedURL = async(_file:any)=>{
-    const imageType = _file.type
+  const UploadImageOnS3 = async(_file:any)=>{
     const imageName = _file.name
-    if(!imageName || !imageType) return ""
+    const imageType = _file.type 
+    if(!imageName || !imageType) return "";
     toast.loading("Uploading Image",{id:"Uploading Image"})
+    let _signedURl = signedUrl
+    if(!_signedURl){
+      console.log("creating signed url")
+      try {
+        const res = await graphqlClient.request(GetSignedUrlForTweet,{imageType,imageName})
+        _signedURl = res.getSignedURLForTweet;
+        setSignedUrl(_signedURl)
+      } catch (error:any) {
+        toast.error(error?.response?.errors[0]?.message, {id:"Uploading Image"})
+        return ""
+      }
+    }
     try {
-      const signedUrl = await graphqlClient.request(GetSignedUrlForTweet,{imageType,imageName})
-      return signedUrl.getSignedURLForTweet;
+      console.log("uploading on s3")
+      await axios.put(_signedURl,_file,{headers:{'Content-Type':imageType}})
+      const url = new URL(_signedURl)
+      toast.success("Uploaded Image",{id:"Uploading Image"})
+      return `${url.origin}${url.pathname}`
     } catch (error:any) {
-      toast.error(error?.response?.errors[0]?.message, {id:"Uploading Image"})
+      toast.error(error?.response?.data,{id:"Uploading Image"})
       return ""
     }
   }
-
-  const uploadImageOnS3 = async(signedURL:string)=>{
-    if(!signedURL) return ""
-    await axios.put(signedURL,file,{headers:{'Content-Type':file?.type}})
-    const url = new URL(signedURL)
-    toast.success("Uploaded Image",{id:"Uploading Image"})
-    return `${url.origin}${url.pathname}`
-  }
-
   const handleCreateTweet = useCallback(async()=>{
     if(!content) {toast.error("Please write something!"); return;};
     const formattedContent = content.replace(/\n/g, '<br />');
-    const signedUrl = await getSignedURL(file)
-    const imageUrl = await uploadImageOnS3(signedUrl)
+    const imageUrl = await UploadImageOnS3(file)
     mutate({
       imageUrl:imageUrl,
       content:formattedContent
     })
-    setContent('')
-    setFile({type:''})
-    setSelectedImageUrl('')
-  },[content,file])
+  },[content,file,signedUrl])
 
-  const handleFileInput = (e:any)=>{
+  const handleFileInput = useCallback((e:any)=>{
     const _file = e.target.files[0]
     if(_file){
       const _imageUrl = URL.createObjectURL(_file)
       setFile(_file)
       setSelectedImageUrl(_imageUrl)
     }
-  }
+  },[file,selectedImageUrl])
+
   return (
     <div className="flex gap-5 p-5">
       <Image
