@@ -22,7 +22,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   
   const user = await getUserInfo(params?.id)
   if(!user) notFound()
-  const date = new Date(user.createdAt);
+  const date = new Date(Number(user.createdAt));
   const formattedDate = date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

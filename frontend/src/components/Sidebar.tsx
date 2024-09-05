@@ -50,7 +50,7 @@ const Sidebar = () => {
       icon: <MdMoreHoriz />,
       link:"/"
     },
-  ],[])
+  ],[userData])
   
   const handleClickOutSide = (e:any) =>{
     if (buttonRef.current && !buttonRef.current.contains(e.target)) {

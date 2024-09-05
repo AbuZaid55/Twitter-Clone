@@ -23,7 +23,6 @@ const MakePostCard = () => {
     toast.loading("Uploading Image",{id:"Uploading Image"})
     let _signedURl = signedUrl
     if(!_signedURl){
-      console.log("creating signed url")
       try {
         const res = await graphqlClient.request(GetSignedUrlForTweet,{imageType,imageName})
         _signedURl = res.getSignedURLForTweet;
@@ -34,7 +33,6 @@ const MakePostCard = () => {
       }
     }
     try {
-      console.log("uploading on s3")
       await axios.put(_signedURl,_file,{headers:{'Content-Type':imageType}})
       const url = new URL(_signedURl)
       toast.success("Uploaded Image",{id:"Uploading Image"})

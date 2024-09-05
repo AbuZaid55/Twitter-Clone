@@ -20,7 +20,9 @@ export type Mutation = {
   __typename?: 'Mutation';
   continueWithGoogle: Scalars['String']['output'];
   createTweet: Tweet;
+  followUser: Scalars['Boolean']['output'];
   signUp: Scalars['String']['output'];
+  unFollowUser: Scalars['Boolean']['output'];
 };
 
 
@@ -37,12 +39,22 @@ export type MutationCreateTweetArgs = {
 };
 
 
+export type MutationFollowUserArgs = {
+  to: Scalars['ID']['input'];
+};
+
+
 export type MutationSignUpArgs = {
   avatar: Scalars['String']['input'];
   confirm_pass: Scalars['String']['input'];
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationUnFollowUserArgs = {
+  to?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type Query = {
@@ -86,6 +98,8 @@ export type User = {
   avatar: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
+  followers?: Maybe<Array<Maybe<User>>>;
+  followings?: Maybe<Array<Maybe<User>>>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   tweets?: Maybe<Array<Maybe<Tweet>>>;
