@@ -19,7 +19,7 @@ export const CreateTweet = async(userId:string,content:string,imageUrl?:string) 
 }
 
 export const GetTweetsByAuthor = async(authorId:string)=>{
-    const result = await prisma.tweet.findMany({where:{author:{id:authorId}}})
+    const result = await prisma.tweet.findMany({where:{author:{id:authorId}},orderBy:{createdAt:"desc"}})
     return result;
 }
 

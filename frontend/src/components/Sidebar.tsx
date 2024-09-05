@@ -87,7 +87,7 @@ const Sidebar = () => {
         <button className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5">Post</button>
 
         <div className="flex items-center gap-5 absolute bottom-2 mb-2 mr-5 bg-slate-900 px-6 py-3 rounded-full text-xl">
-          <Image className="rounded-full" src={(userData?.avatar)?userData.avatar:'/profile.jpg'} width={40} height={40} alt="Pic"/>
+          <Image className="rounded-full" src={(userData?.avatar)?userData.avatar:'/profile.jpg'} width={40} height={40} alt="Pic" priority />
 
           <h1 className=" h-8 overflow-hidden">{userData?.name}</h1>
 

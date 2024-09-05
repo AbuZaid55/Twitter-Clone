@@ -29,6 +29,12 @@ export const GetUserById = graphql(`
       email
       avatar
       createdAt
+      followers {
+        id
+      }
+      followings {
+        id
+      }
       tweets {
         id
         content

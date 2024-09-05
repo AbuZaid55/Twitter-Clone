@@ -22,13 +22,14 @@ const PostCard = ({tweet}:{tweet:Tweet}) => {
         style={{ objectFit: 'cover' }}
         sizes="48px"
         alt="Pic"
+        priority 
       />
      </div>
      </Link>
       <div className="w-full">
         <h1 className='font-semibold'><Link className='hover:border-b ' href={`/${tweet.author?.id}`}>{tweet.author?.name}</Link> <span className='font-extralight'> · {timeago}</span></h1>
         <p dangerouslySetInnerHTML={{__html:tweet.content}}></p>
-        {tweet.imageUrl && <Image className='p-2' src={tweet.imageUrl} width={400} height={400} alt='Image'/>} 
+        {tweet.imageUrl && <Image className='p-2' src={tweet.imageUrl} width={400} height={400} alt='Image' priority />} 
         <div className='flex items-center justify-between mt-3 text-lg'>
             <FiMessageCircle className=' cursor-pointer hover:text-blue-500 transition-all'/>
             <BiRepost className=' cursor-pointer hover:text-blue-500 transition-all'/>

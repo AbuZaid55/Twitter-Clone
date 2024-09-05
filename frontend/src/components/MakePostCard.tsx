@@ -69,6 +69,7 @@ const MakePostCard = () => {
         width={34}
         height={34}
         alt="Pic"
+        priority 
       />
       <div className="w-full">
         <textarea
@@ -78,7 +79,7 @@ const MakePostCard = () => {
           rows={3}
           placeholder="What is happening?!"
         ></textarea>
-        {selectedImageUrl && <Image className='p-8' src={selectedImageUrl} width={400} height={400} alt='SelectedImage'/>}
+        {selectedImageUrl && <Image className='p-8' src={selectedImageUrl} width={400} height={400} alt='SelectedImage' priority />}
         <div className="flex items-center justify-between">
           <label htmlFor="file" className="text-blue-500 cursor-pointer text-xl">
             <RiGalleryLine />
