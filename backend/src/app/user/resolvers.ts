@@ -1,5 +1,5 @@
 import { User } from "@prisma/client"
-import { LognIn, signup, ContinueWithGoogle, getUserById } from "../../api/user"
+import { LognIn, signup, ContinueWithGoogle, getUserById, FollowUser, UnFollowUser, GetFollowers, GetFollowing } from "../../api/user"
 import { SignUpPayload } from "../../interfaces"
 import {GrapqlContext} from '../../interfaces'
 import { GetTweetsByAuthor } from "../../api/tweet"
@@ -12,7 +12,7 @@ const queries = {
         return result
     },
     getCurrentUser:async(_:any,args:any,ctx:GrapqlContext)=>{
-        if(!ctx.user) throw new Error("You are not authenticated!")
+        if(!ctx.user || !ctx.user?.id) throw new Error("You are not authenticated!")
         return ctx.user
     },
     getUserById:async(_:any,{id}:{id:string})=>{
@@ -28,11 +28,23 @@ const mutations = {
     continueWithGoogle:async(_:any,{name,email,avatar}:{name:string,email:string,avatar:string})=>{
         const result = await ContinueWithGoogle(name,email,avatar) 
         return result;
+    },
+    followUser:async(_:any,{to}:{to:string},ctx:GrapqlContext)=>{
+        if(!ctx.user || !ctx.user?.id) throw new Error("You are not authenticated!")
+        const result = await FollowUser(ctx.user.id,to)
+        return result;
+    },
+    unFollowUser:async(_:any,{to}:{to:string},ctx:GrapqlContext)=>{
+        if(!ctx.user || !ctx.user?.id) throw new Error("You are not authenticated!")
+        const result = await UnFollowUser(ctx.user.id,to)
+        return result;
     }
 }
 const extraResolvers = {
     User:{
-        tweets:async(parent:User) => await GetTweetsByAuthor(parent.id) 
+        tweets:async(parent:User) => await GetTweetsByAuthor(parent.id),
+        followers:async(parent:User) => await GetFollowers(parent.id),
+        followings:async(parent:User)=> await GetFollowing(parent.id)
     }
 }
 export const resolvers = {mutations, queries,extraResolvers}

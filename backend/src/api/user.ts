@@ -75,3 +75,49 @@ export const getUserById = async(id:string)=>{
     }
     return result;
 }
+
+export const FollowUser = async(from:string,to:string)=>{
+    if(!from || !to) throw new Error("Id not found!")
+     await prisma.follows.create({
+        data:{
+            follower:{connect:{id:from}},
+            following:{connect:{id:to}}
+        }
+    })
+    return true
+}
+export const UnFollowUser = async(from:string,to:string)=>{
+    if(!from || !to) throw new Error("Id not found!")
+    await prisma.follows.delete({
+        where:{
+            followerId_followingId:{
+                followerId:from,
+                followingId:to
+            }
+        }
+    })
+    return true;
+}
+
+export const GetFollowers = async(id:string) =>{
+    const result = await prisma.follows.findMany({
+        where:{
+            following:{id:id}
+        },
+        include:{
+            follower:true
+        }
+    })
+    return result.map((el)=>el.follower)
+}
+export const GetFollowing = async(id:string)=>{
+    const result =  await prisma.follows.findMany({
+        where:{
+            follower:{id:id}
+        },
+        include:{
+            following:true,
+        }
+    })
+    return result.map((el)=>el.following)
+}

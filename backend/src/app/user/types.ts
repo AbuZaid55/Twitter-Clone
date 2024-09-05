@@ -7,5 +7,7 @@ export const types = `#graphql
         createdAt: String!
         twitter_token: String
         tweets: [Tweet]
+        followers: [User]
+        followings: [User]
     }
 `
