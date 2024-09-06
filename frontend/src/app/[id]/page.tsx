@@ -26,6 +26,7 @@ const page = ({ params }: { params: { id: string } }) => {
     try {
       await graphqlClient.request(FollowUser, { to: user?.id });
       queryClient.invalidateQueries({queryKey:['user-by-id']})
+      queryClient.invalidateQueries({queryKey:['current-user']})
       setIsFollowing(true);
     } catch (error: any) {
       toast.error(error?.response?.errors[0]?.message);
@@ -37,6 +38,7 @@ const page = ({ params }: { params: { id: string } }) => {
     try {
       await graphqlClient.request(UnFollowUser, { to: user?.id });
       queryClient.invalidateQueries({queryKey:['user-by-id']})
+      queryClient.invalidateQueries({queryKey:['current-user']})
       setIsFollowing(false);
     } catch (error: any) {
       toast.error(error?.response?.errors[0]?.message);

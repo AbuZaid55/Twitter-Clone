@@ -2,6 +2,7 @@ import { prisma } from "../client/db"
 import bcrypt from 'bcrypt'
 import JWTService from "../services/jwt"
 import { SignUpPayload } from "../interfaces"
+import { User } from "@prisma/client"
 
 export const signup = async(data:SignUpPayload)=>{
     const {name,email,password, confirm_pass,avatar} = data
@@ -120,4 +121,19 @@ export const GetFollowing = async(id:string)=>{
         }
     })
     return result.map((el)=>el.following)
+}
+export const GetRecommonedUser = async(id:string)=>{
+    let list:User[] = []
+    const result = await prisma.follows.findMany({
+        where:{follower:{id:id}},
+        include:{following:{include:{followings:{include:{following:true}}}}}
+    })
+    result.map((MyFollowing)=>{
+        MyFollowing.following.followings.map((followingOfMyFollowing)=>{
+            if(followingOfMyFollowing.followingId!=id && result.findIndex((e)=>e.followingId===followingOfMyFollowing.followingId)<0){
+                list.push(followingOfMyFollowing.following)
+            }
+        })
+    })
+    return list
 }

@@ -16,6 +16,11 @@ export const GetCurrentUser = graphql(`
       email
       id
       name
+      recommondedUsers {
+        id
+        name
+        avatar
+      }
     }
   }
 `);

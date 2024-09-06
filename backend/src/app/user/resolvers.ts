@@ -1,5 +1,5 @@
 import { User } from "@prisma/client"
-import { LognIn, signup, ContinueWithGoogle, getUserById, FollowUser, UnFollowUser, GetFollowers, GetFollowing } from "../../api/user"
+import { LognIn, signup, ContinueWithGoogle, getUserById, FollowUser, UnFollowUser, GetFollowers, GetFollowing, GetRecommonedUser } from "../../api/user"
 import { SignUpPayload } from "../../interfaces"
 import {GrapqlContext} from '../../interfaces'
 import { GetTweetsByAuthor } from "../../api/tweet"
@@ -44,7 +44,8 @@ const extraResolvers = {
     User:{
         tweets:async(parent:User) => await GetTweetsByAuthor(parent.id),
         followers:async(parent:User) => await GetFollowers(parent.id),
-        followings:async(parent:User)=> await GetFollowing(parent.id)
+        followings:async(parent:User)=> await GetFollowing(parent.id),
+        recommondedUsers:async(parent:User)=> await GetRecommonedUser(parent.id)
     }
 }
 export const resolvers = {mutations, queries,extraResolvers}

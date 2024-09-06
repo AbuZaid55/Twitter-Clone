@@ -78,7 +78,7 @@ const Sidebar = () => {
         </div>
 
         {sidebarItem.map((item, i) => (
-          <Link href={item.link} className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-900 w-fit px-4 py-2 rounded-full transition-all" key={i}>
+          <Link href={item.link} className="flex items-center text-xl gap-2 mt-3 hover:bg-slate-800 w-fit px-4 py-2 rounded-full transition-all" key={i}>
             <span>{item.icon}</span>
             <span>{item.title}</span>
           </Link>
@@ -86,7 +86,7 @@ const Sidebar = () => {
 
         <button className="bg-blue-500 font-bold px-20 py-3 rounded-full mt-5">Post</button>
 
-        <div className="flex items-center gap-5 absolute bottom-2 mb-2 mr-5 bg-slate-900 px-6 py-3 rounded-full text-xl">
+        <div className="flex items-center gap-5 absolute bottom-2 mb-2 mr-5 bg-slate-800 px-6 py-3 rounded-full text-xl">
           <Image className="rounded-full" src={(userData?.avatar)?userData.avatar:'/profile.jpg'} width={40} height={40} alt="Pic" priority />
 
           <h1 className=" h-8 overflow-hidden">{userData?.name}</h1>
