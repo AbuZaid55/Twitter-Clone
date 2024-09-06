@@ -15,7 +15,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "#graphql \n    mutation createTweet($content: String!, $imageUrl: String) {\n        createTweet(content: $content, imageUrl: $imageUrl) {\n            id\n        }\n}\n": types.CreateTweetDocument,
     "\n    mutation SignUp($name: String!, $email: String!, $password: String!, $confirm_pass: String!, $avatar: String!) {\n        signUp(name: $name, email: $email, password: $password, confirm_pass: $confirm_pass, avatar: $avatar)\n    }\n": types.SignUpDocument,
-    "\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n": types.MutationDocument,
+    "\n    mutation continueWithGoogle($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n": types.ContinueWithGoogleDocument,
+    " \n    mutation followUser($to: ID!) {\n        followUser(to: $to)\n    }\n": types.FollowUserDocument,
+    " \n    mutation unFollowUser($to: ID!) {\n        unFollowUser(to: $to)\n    }\n": types.UnFollowUserDocument,
     "#graphql \n    query getAllTweets {\n      getAllTweets {\n        content\n        createdAt\n        id\n        imageUrl\n        updatedAt\n        author {\n          id\n          name\n          email\n          avatar\n        }\n      }\n    }\n": types.GetAllTweetsDocument,
     "#graphql\n  query Query($imageType: String!, $imageName: String!) {\n    getSignedURLForTweet(imageType: $imageType, imageName: $imageName)\n  }\n": types.QueryDocument,
     "\n  #graphql\n  query logIn($email: String!, $password: String!) {\n    logIn(email: $email, password: $password)\n  }\n": types.LogInDocument,
@@ -48,7 +50,15 @@ export function graphql(source: "\n    mutation SignUp($name: String!, $email: S
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n"): (typeof documents)["\n    mutation Mutation($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n"];
+export function graphql(source: "\n    mutation continueWithGoogle($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n"): (typeof documents)["\n    mutation continueWithGoogle($name: String!, $email: String!, $avatar: String!) {\n        continueWithGoogle(name: $name, email: $email, avatar: $avatar)\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: " \n    mutation followUser($to: ID!) {\n        followUser(to: $to)\n    }\n"): (typeof documents)[" \n    mutation followUser($to: ID!) {\n        followUser(to: $to)\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: " \n    mutation unFollowUser($to: ID!) {\n        unFollowUser(to: $to)\n    }\n"): (typeof documents)[" \n    mutation unFollowUser($to: ID!) {\n        unFollowUser(to: $to)\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

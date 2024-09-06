@@ -6,7 +6,17 @@ export const SignUp = graphql(`
     }
 `)
 export const ContinueWithGoogle = graphql(`
-    mutation Mutation($name: String!, $email: String!, $avatar: String!) {
+    mutation continueWithGoogle($name: String!, $email: String!, $avatar: String!) {
         continueWithGoogle(name: $name, email: $email, avatar: $avatar)
+    }
+`)
+export const FollowUser = graphql(` 
+    mutation followUser($to: ID!) {
+        followUser(to: $to)
+    }
+`)
+export const UnFollowUser = graphql(` 
+    mutation unFollowUser($to: ID!) {
+        unFollowUser(to: $to)
     }
 `)

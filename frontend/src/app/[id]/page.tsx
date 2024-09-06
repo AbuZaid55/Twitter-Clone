@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -6,35 +6,60 @@ import Link from "next/link";
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
 import { graphqlClient } from "@/client/graphqlClient";
-import { GetUserById } from "@/graphql/queries/user";
-import { Tweet, User } from "../../../gql/graphql";
+import { Tweet } from "../../../gql/graphql";
 import { notFound } from "next/navigation";
+import { useCurrentUser, useGetUserById } from "@/hooks/user";
+import { FollowUser, UnFollowUser } from "@/graphql/mutations/user";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
-const page =  ({ params }: { params: { id: string } }) => {
-  const [user,setUser] = useState<User | null>(null)
-  const [formattedDate,setFormattedDate] = useState('')
-  useEffect(()=>{
-    const getUserInfo = async(id:string)=>{
-      try {
-        const userInfo = await graphqlClient.request(GetUserById,{ id:id });
-        const user = userInfo.getUserById
-        if(!user) notFound()
-          const date = new Date(Number(user.createdAt));
-          const formattedDate = date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-          });
-        setUser(user as User)
-        setFormattedDate(formattedDate)
-      } catch (error) {
-        console.log(error)
-      }
+const page = ({ params }: { params: { id: string } }) => {
+
+  const { user,isLoading } = useGetUserById(params.id);
+  const [formattedDate, setFormattedDate] = useState("");
+  const { user: currentUser } = useCurrentUser();
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
+  const handleFollowUser = async () => {
+    if (!user?.id) return;
+    try {
+      await graphqlClient.request(FollowUser, { to: user?.id });
+      queryClient.invalidateQueries({queryKey:['user-by-id']})
+      setIsFollowing(true);
+    } catch (error: any) {
+      toast.error(error?.response?.errors[0]?.message);
     }
-    getUserInfo(params.id)
-  },[params])
+  };
+
+  const handleUnFollowUser = async () => {
+    if (!user?.id) return;
+    try {
+      await graphqlClient.request(UnFollowUser, { to: user?.id });
+      queryClient.invalidateQueries({queryKey:['user-by-id']})
+      setIsFollowing(false);
+    } catch (error: any) {
+      toast.error(error?.response?.errors[0]?.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    if (!user && !isLoading) notFound();
+    const date = new Date(Number(user?.createdAt));
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+    });
+    const exist = user?.followers?.some(
+      (followers) => followers?.id === currentUser?.id
+    );
+    setFormattedDate(formattedDate);
+    setIsFollowing(exist as boolean);
+  }, [currentUser, user]);
+
   return (
     <div>
-
       <div className="flex items-center">
         <Link href="/" className="text-3xl p-4">
           <FaArrowLeftLong />
@@ -52,7 +77,7 @@ const page =  ({ params }: { params: { id: string } }) => {
           width={500}
           height={500}
           alt="Banner"
-          priority 
+          priority
         />
       </div>
       <div className="relative p-4">
@@ -62,11 +87,31 @@ const page =  ({ params }: { params: { id: string } }) => {
           width={140}
           height={140}
           alt="Profile"
-          priority 
+          priority
         />
-        <button className="py-2 px-4 border border-slate-500 absolute top-4 right-4 rounded-full hover:bg-slate-900">
-          Edit profile
-        </button>
+        {user?.id === currentUser?.id ? (
+          <button className="py-2 px-4 border border-slate-500 absolute top-4 right-4 rounded-full hover:bg-slate-900">
+            Edit profile
+          </button>
+        ) : (
+          <div>
+            {isFollowing ? (
+              <button
+                onClick={handleUnFollowUser}
+                className="py-2 px-4 border bg-white absolute top-4 right-4 rounded-full text-slate-600 font-semibold"
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                onClick={handleFollowUser}
+                className="py-2 px-4 border bg-white absolute top-4 right-4 rounded-full text-slate-600 font-semibold"
+              >
+                Follow
+              </button>
+            )}
+          </div>
+        )}
         <div className="pt-[70px]">
           <h1 className="font-bold text-2xl text-center w-[140px]">
             {user?.name}
@@ -95,7 +140,7 @@ const page =  ({ params }: { params: { id: string } }) => {
       </div>
 
       <div>
-        {user?.tweets?.map((tweet:any) => (
+        {user?.tweets?.map((tweet: any) => (
           <PostCard key={tweet.id} tweet={tweet as Tweet} />
         ))}
       </div>
