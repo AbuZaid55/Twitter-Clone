@@ -10,7 +10,9 @@ import Link from 'next/link';
 
 const PostCard = ({tweet}:{tweet:Tweet}) => {
   if(!tweet) return;
-  const timeago = moment(Number(tweet.updatedAt)).fromNow()
+  const updatedAt:any = tweet.updatedAt
+  const date = !isNaN(updatedAt) ? new Date(Number(updatedAt)) : new Date(updatedAt);
+  const timeago = moment(date).fromNow()
   return (
     <div className="flex gap-5 p-5 border-t border-slate-500">
      <Link href={`/${tweet.author?.id}`}>

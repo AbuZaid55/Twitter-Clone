@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import JWTService from "../services/jwt"
 import { SignUpPayload } from "../interfaces"
 import { User } from "@prisma/client"
+import { redisClient } from "../client/redis"
 
 export const signup = async(data:SignUpPayload)=>{
     const {name,email,password, confirm_pass,avatar} = data
@@ -64,6 +65,8 @@ export const getUserById = async(id:string)=>{
     if(!id){
         throw new Error("User id not found!")
     }
+    const cachedValue = await redisClient.get(`USER:${id}`)
+    if(cachedValue) return JSON.parse(cachedValue)
     const result = await prisma.user.findUnique({where:{id:id},select:{
         id:true,
         name:true,
@@ -74,6 +77,7 @@ export const getUserById = async(id:string)=>{
     if(!result){
         throw new Error("User does not exist!")
     }
+    await redisClient.set(`USER:${id}`,JSON.stringify(result))
     return result;
 }
 
@@ -85,6 +89,9 @@ export const FollowUser = async(from:string,to:string)=>{
             following:{connect:{id:to}}
         }
     })
+    await redisClient.del(`RECOMMENDED_USERS:${from}`)
+    await redisClient.del(`USER_FOLLOWINGS:${from}`)
+    await redisClient.del(`USER_FOLLOWERS:${to}`)
     return true
 }
 export const UnFollowUser = async(from:string,to:string)=>{
@@ -97,11 +104,16 @@ export const UnFollowUser = async(from:string,to:string)=>{
             }
         }
     })
+    await redisClient.del(`RECOMMENDED_USERS:${from}`)
+    await redisClient.del(`USER_FOLLOWINGS:${from}`)
+    await redisClient.del(`USER_FOLLOWERS:${to}`)
     return true;
 }
 
 export const GetFollowers = async(id:string) =>{
-    const result = await prisma.follows.findMany({
+    const cachedValue = await redisClient.get(`USER_FOLLOWERS:${id}`)
+    if(cachedValue) return JSON.parse(cachedValue)
+    const data = await prisma.follows.findMany({
         where:{
             following:{id:id}
         },
@@ -109,10 +121,14 @@ export const GetFollowers = async(id:string) =>{
             follower:true
         }
     })
-    return result.map((el)=>el.follower)
+    const result =  data.map((el)=>el.follower)
+    await redisClient.set(`USER_FOLLOWERS:${id}`,JSON.stringify(result))
+    return result;
 }
 export const GetFollowing = async(id:string)=>{
-    const result =  await prisma.follows.findMany({
+    const cachedValue = await redisClient.get(`USER_FOLLOWINGS:${id}`)
+    if(cachedValue) return JSON.parse(cachedValue)
+    const data =  await prisma.follows.findMany({
         where:{
             follower:{id:id}
         },
@@ -120,9 +136,13 @@ export const GetFollowing = async(id:string)=>{
             following:true,
         }
     })
-    return result.map((el)=>el.following)
+    const result =  data.map((el)=>el.following)
+    await redisClient.set(`USER_FOLLOWINGS:${id}`,JSON.stringify(result))
+    return result
 }
 export const GetRecommonedUser = async(id:string)=>{
+    const cachedValue = await redisClient.get(`RECOMMENDED_USERS:${id}`)
+    if(cachedValue) return JSON.parse(cachedValue)
     let list:User[] = []
     const result = await prisma.follows.findMany({
         where:{follower:{id:id}},
@@ -135,5 +155,6 @@ export const GetRecommonedUser = async(id:string)=>{
             }
         })
     })
+    await redisClient.set(`RECOMMENDED_USERS:${id}`,JSON.stringify(list))   
     return list
 }
