@@ -1,10 +1,12 @@
 import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { LogIn } from "@/graphql/queries/user";
-import { graphqlClient } from "@/client/graphqlClient";
+import { graphqlClientInDockerContainer } from "@/client/graphqlClient";
+import { Account , Profile as NextAuthProfile } from "next-auth";
 import { ContinueWithGoogle } from "@/graphql/mutations/user";
-import { Account, Profile } from "@/interfaces";
-
+interface GoogleProfile extends NextAuthProfile {
+    picture?: string;
+}
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID || "";
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
@@ -16,9 +18,10 @@ const authOptions = {
             async authorize(credentials: any): Promise<any> {
                 const { email, password } = credentials;
                 try {
-                    const data = await graphqlClient.request(LogIn, { email, password });
+                    const data = await graphqlClientInDockerContainer.request(LogIn, { email, password });
                     return {twitter_token:data.logIn}
                 } catch (error:any) {
+                    console.log("LoginError",error)
                     throw new Error(error?.response?.errors[0]?.message)
                 }
             }
@@ -33,16 +36,15 @@ const authOptions = {
             session.user.twitter_token = token.twitter_token
             return session;
         },
-        async jwt({ token, user, account, profile }: { token: any, user: any, account: Account, profile: Profile }) {
-
+        async jwt({ token, user, account, profile }: { token: any, user: any, account: Account | null, profile?:GoogleProfile }) {
             if (account?.provider === "google" && profile) {
                 const { name, email, picture } = profile;
-                const avatar = picture;
+                if(!name || !email) return null;
                 try {
-                    const data = await graphqlClient.request(ContinueWithGoogle, { name, email, avatar });
-                    token.twitter_token = data?.continueWithGoogle
+                    const data = await graphqlClientInDockerContainer.request(ContinueWithGoogle, { name, email, avatar:picture?picture:'' });
+                    token.twitter_token = data?.continueWithGoogle  
                 } catch (error:any) {
-                    console.log(error?.response?.errors[0]?.message)
+                    console.log("ContinueWithGoogleError",error)
                     return null;
                 }
             }

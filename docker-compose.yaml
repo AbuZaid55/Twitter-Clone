@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    container_name: twitter_clone-backend
+    env_file:
+      - ./backend/.env
+    networks:
+      - twitter_clone_network
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: twitter_clone-frontend
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    networks:
+      - twitter_clone_network
+
+networks:
+  twitter_clone_network:
+    driver: bridge

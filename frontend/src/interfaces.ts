@@ -13,7 +13,7 @@ export interface TwitterSidebarButton {
 export interface Profile {
     email: string;
     name: string;
-    picture: string;
+    picture?: string;
 }
 export interface Account {
     provider: string;

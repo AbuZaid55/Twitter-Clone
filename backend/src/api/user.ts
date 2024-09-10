@@ -89,6 +89,10 @@ export const FollowUser = async(from:string,to:string)=>{
             following:{connect:{id:to}}
         }
     })
+    const data = await prisma.follows.findMany({where:{followingId:from}})
+    data?.map(async(object)=>{
+        await redisClient.del(`RECOMMENDED_USERS:${object.followerId}`)
+    })
     await redisClient.del(`RECOMMENDED_USERS:${from}`)
     await redisClient.del(`USER_FOLLOWINGS:${from}`)
     await redisClient.del(`USER_FOLLOWERS:${to}`)
@@ -103,6 +107,10 @@ export const UnFollowUser = async(from:string,to:string)=>{
                 followingId:to
             }
         }
+    })
+    const data = await prisma.follows.findMany({where:{followingId:from}})
+    data?.map(async(object)=>{
+        await redisClient.del(`RECOMMENDED_USERS:${object.followerId}`)
     })
     await redisClient.del(`RECOMMENDED_USERS:${from}`)
     await redisClient.del(`USER_FOLLOWINGS:${from}`)
@@ -148,10 +156,13 @@ export const GetRecommonedUser = async(id:string)=>{
         where:{follower:{id:id}},
         include:{following:{include:{followings:{include:{following:true}}}}}
     })
-    result.map((MyFollowing)=>{
-        MyFollowing.following.followings.map((followingOfMyFollowing)=>{
+    result.map((MyFollowing:any)=>{
+        MyFollowing.following.followings.map((followingOfMyFollowing:any)=>{
             if(followingOfMyFollowing.followingId!=id && result.findIndex((e)=>e.followingId===followingOfMyFollowing.followingId)<0){
-                list.push(followingOfMyFollowing.following)
+                const isFind = list.findIndex((e)=>e.id===followingOfMyFollowing.followingId)
+                if(isFind<0){
+                    list.push(followingOfMyFollowing.following)
+                }
             }
         })
     })

@@ -3,6 +3,7 @@ import { LognIn, signup, ContinueWithGoogle, getUserById, FollowUser, UnFollowUs
 import { SignUpPayload } from "../../interfaces"
 import {GrapqlContext} from '../../interfaces'
 import { GetTweetsByAuthor } from "../../api/tweet"
+import { prisma } from "../../client/db"
 
 
 
@@ -13,7 +14,9 @@ const queries = {
     },
     getCurrentUser:async(_:any,args:any,ctx:GrapqlContext)=>{
         if(!ctx.user || !ctx.user?.id) throw new Error("You are not authenticated!")
-        return ctx.user
+        const result = await prisma.user.findUnique({where:{id:ctx.user.id}})
+        if(!result) throw new Error("User not found!");
+        return result
     },
     getUserById:async(_:any,{id}:{id:string})=>{
         const result = await getUserById(id)

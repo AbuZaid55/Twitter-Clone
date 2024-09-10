@@ -12,7 +12,7 @@ const RecommondedUser = () => {
       } bg-slate-800 ml-10 w-full p-4 rounded-xl mt-5`}
     >
       <h1 className="text-xl pb-2 pr-3">Users you may know</h1>
-      {user?.recommondedUsers?.map((recommededUser) => (
+      {user?.recommondedUsers?.map((recommededUser:any) => (
         <div
           key={recommededUser?.id}
           className="flex items-center justify-between gap-4 bg-slate-900 py-3 px-6 rounded-full my-2"

@@ -8,7 +8,7 @@ const ReactQueryClientProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={true} />
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </QueryClientProvider>
   );
 };
